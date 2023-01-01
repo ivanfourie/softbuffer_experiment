@@ -1,9 +1,10 @@
 use std::cmp;
 
+#[derive(Debug)]
 pub struct Display {
     color_buffer: Vec<u32>,
-    window_width: u32,
-    window_height: u32,
+    pub width: u32,
+    pub height: u32,
 }
 
 impl Display {
@@ -13,8 +14,8 @@ impl Display {
 
         Ok(Display {
             color_buffer: buffer,
-            window_width,
-            window_height,
+            width: window_width,
+            height: window_height,
         })
     }
 
@@ -23,9 +24,9 @@ impl Display {
     }
 
     pub fn clear_color_buffer(&mut self, color: u32) {
-        for y in 0..self.window_height {
-            for x in 0..self.window_width {
-                self.color_buffer[(self.window_width * y) as usize + x as usize] = color;
+        for y in 0..self.height {
+            for x in 0..self.width {
+                self.color_buffer[(self.width * y) as usize + x as usize] = color;
             }
         }
     }
@@ -40,8 +41,8 @@ pub trait Drawable {
 
 impl Drawable for Display {
     fn draw_pixel(&mut self, x: usize, y: usize, color: u32) {
-        if x < self.window_width as usize && y < self.window_height as usize {
-            self.color_buffer[(self.window_width as usize * y) + x] = color;
+        if x < self.width as usize && y < self.height as usize {
+            self.color_buffer[(self.width as usize * y) + x] = color;
         }
     }
 
@@ -49,8 +50,8 @@ impl Drawable for Display {
         // Draw a background grid that fills the entire window.
         // Lines should be rendedered at every row/col multiple of 10.
     
-        for y in (0..self.window_width).step_by(size) {
-            for x in (0..self.window_width).step_by(size) {
+        for y in (0..self.width).step_by(size) {
+            for x in (0..self.width).step_by(size) {
                 self.draw_pixel(x as usize, y as usize, color)
             }
         }

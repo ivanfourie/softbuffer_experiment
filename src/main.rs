@@ -1,6 +1,10 @@
+mod vector;
 mod display;
+mod world;
 
-use display::{ Display, Drawable };
+use display::Display;
+use world::World;
+
 use softbuffer::GraphicsContext;
 use winit::event::{Event, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
@@ -10,29 +14,33 @@ fn main() {
     // Create the event loop and window
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new().build(&event_loop).unwrap();
-    let mut graphics_context = unsafe { GraphicsContext::new(window) }.unwrap();
+    let mut graphics_context = unsafe { GraphicsContext::new(&window, &window) }.unwrap();
+
+    let (width, height) = {
+        let size = window.inner_size();
+        (size.width, size.height)
+    };
+
+    let mut display = Display::new(width, height).unwrap();
+    let mut world = World::new().unwrap();
 
     // Set up the event loop to run indefinitely
     event_loop.run(move |event, _, control_flow| {
-        *control_flow = ControlFlow::Wait;
+        *control_flow = ControlFlow::Poll;
+
+        // Update the world
+        world.update();
 
         // Match on the event value
         match event {
+            Event::MainEventsCleared => {
+                window.request_redraw();
+            }
             // If the event is a redraw request for the window...
-            Event::RedrawRequested(window_id) if window_id == graphics_context.window().id() => {
-                // Get the width and height of the window
-                let (width, height) = {
-                    let size = graphics_context.window().inner_size();
-                    (size.width, size.height)
-                };
+            Event::RedrawRequested(window_id) if window_id == window.id() => {
+                // Render the world
+                world.render(&mut display);
                 
-                let mut display = Display::new(width, height).unwrap();
-                display.clear_color_buffer(0xFF000000);
-                display.draw_grid(10, 0xFF444444);
-                display.draw_line(0, 0, 100, 100, 0xFF00FF00);
-                display.draw_rect(100, 100, 100, 100, 0xFF0000FF);
-                
-
                 // Set the buffer as the window's buffer
                 graphics_context.set_buffer(&display.color_buffer(), width as u16, height as u16);
             }
@@ -40,13 +48,13 @@ fn main() {
             Event::WindowEvent {
                 event: WindowEvent::CloseRequested,
                 window_id,
-            } if window_id == graphics_context.window().id() => {
+            } if window_id == window.id() => {
                 // Exit the event loop
                 *control_flow = ControlFlow::Exit;
             }
             // If the event is not a redraw request or close request for the window, do nothing
-            _ => {}
-        }
+            _ => { }
+        }  
     });
 }
 

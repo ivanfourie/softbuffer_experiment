@@ -1,3 +1,4 @@
+#![deny(clippy::all)]
 mod vector;
 mod display;
 mod world;
@@ -42,7 +43,7 @@ fn main() {
                 world.render(&mut display);
                 
                 // Set the buffer as the window's buffer
-                graphics_context.set_buffer(&display.color_buffer(), width as u16, height as u16);
+                graphics_context.set_buffer(display.color_buffer(), width as u16, height as u16);
             }
             // If the event is a close request for the window...
             Event::WindowEvent {

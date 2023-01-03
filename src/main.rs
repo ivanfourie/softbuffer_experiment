@@ -1,6 +1,6 @@
 #![deny(clippy::all)]
-mod vector;
 mod display;
+mod vector;
 mod world;
 
 use display::Display;
@@ -41,7 +41,7 @@ fn main() {
             Event::RedrawRequested(window_id) if window_id == window.id() => {
                 // Render the world
                 world.render(&mut display);
-                
+
                 // Set the buffer as the window's buffer
                 graphics_context.set_buffer(display.color_buffer(), width as u16, height as u16);
             }
@@ -54,8 +54,7 @@ fn main() {
                 *control_flow = ControlFlow::Exit;
             }
             // If the event is not a redraw request or close request for the window, do nothing
-            _ => { }
-        }  
+            _ => {}
+        }
     });
 }
-

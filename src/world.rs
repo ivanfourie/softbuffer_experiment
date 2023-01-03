@@ -1,5 +1,5 @@
-use crate::vector::{ Vec2, Vec3 };
-use crate::display::{ Display, Drawable };
+use crate::display::{Display, Drawable};
+use crate::vector::{Vec2, Vec3};
 
 const N_POINTS: usize = 9 * 9 * 9;
 
@@ -14,7 +14,11 @@ pub struct World {
 impl World {
     pub fn new() -> Result<Self, String> {
         let mut point_count = 0;
-        let mut cube_points = [Vec3 { x: 0.0, y: 0.0, z: 0.0 }; N_POINTS];
+        let mut cube_points = [Vec3 {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+        }; N_POINTS];
 
         let mut x = -1.0;
         let mut y = -1.0;
@@ -38,8 +42,16 @@ impl World {
         Ok(World {
             cube_points,
             projected_points: [Vec2 { x: 0.0, y: 0.0 }; N_POINTS],
-            camera_position: Vec3 { x: 0.0, y: 0.0, z: -5.0 },
-            cube_rotation: Vec3 { x: 0.0, y: 0.0, z: 0.0 },
+            camera_position: Vec3 {
+                x: 0.0,
+                y: 0.0,
+                z: -5.0,
+            },
+            cube_rotation: Vec3 {
+                x: 0.0,
+                y: 0.0,
+                z: 0.0,
+            },
             fov_factor: 640.0,
         })
     }
@@ -77,7 +89,7 @@ impl World {
     pub fn render(&self, display: &mut Display) {
         display.clear_color_buffer(0xFF000000);
         display.draw_grid(10, 0xFF444444);
-        
+
         for i in 0..N_POINTS {
             let point = self.projected_points[i];
             display.draw_rect(
@@ -85,7 +97,7 @@ impl World {
                 (point.y + (display.height as f32 / 2.0)) as i32,
                 4,
                 4,
-                0xFFFFFF00
+                0xFFFFFF00,
             );
         }
     }

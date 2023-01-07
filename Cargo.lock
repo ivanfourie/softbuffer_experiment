@@ -933,6 +933,7 @@ dependencies = [
 name = "softbuffer_experiment"
 version = "0.1.0"
 dependencies = [
+ "instant",
  "softbuffer",
  "winit",
 ]

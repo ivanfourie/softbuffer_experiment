@@ -1,7 +1,7 @@
 # Introduction
 This project is a test of `winit` and `softbuffer` crates to implement a simple software frame buffer in a cross platform way. 
 
-# Frame rate limiting mechanism
+## Frame rate limiting mechanism
 The `TICKS_PER_SECOND` constant determines the target frame rate, and the `SKIP_TICKS` constant determines the length of each tick in nanoseconds. 
 The `MAX_FRAMESKIP` constant sets the maximum number of frames that can be skipped in a single frame.
 
